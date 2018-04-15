@@ -24,8 +24,12 @@
 (def hvf7-20 '([7 3] [22 3] [11 3] [34 2] [17 2] [52 3] [26 3] [13 3] [40 2] [20 2] [10 2] [5 2] [16 1] [8 1] [4 1] [2 1]))
 (def lf7-20 '(7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2))
 ;; making data for drawing
-(def base-list (take some-num (iterate collatz-basic interger)))
-(def ones (map count-ones base-list))
-(def distinct-ones (distinct ones))
-;; count how many ones for each one
-(map #(count (filter #{%} ones)) distinct-ones)
+;; some-num is the number of iterations and integer is the seed
+(def base-list (take some-num (iterate collatz-basic integer)))
+;; for every node change to binary representation and count how many ones are there
+(def levels (map count-ones base-list))
+;; get a list of levels but without repeating
+(def distinct-levels (distinct levels))
+;; count how many of each level is there
+(map #(count (filter #{%} levels)) distinct-levels)
+
