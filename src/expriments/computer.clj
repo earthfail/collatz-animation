@@ -13,12 +13,19 @@
   (clojure.pprint/cl-format true "decimal ~d  binary ~b  octal ~o  hex ~x\n" n n n n))
 
 (defn count-ones [n]
+  "count 1 in the binary presentation of n"
   (count (filter
           #{"1"}
           (clojure.string/split
            (clojure.pprint/cl-format nil "~b" n)
            #""))))
-
+(defn count-length [n]
+  "count the number of digits between the first 1
+and the last 1 in the binary presentation of n"
+  (clojure.string/join
+   (reverse (drop-while
+             #(= \0 %)
+             (reverse (clojure.pprint/cl-format "~b" n))))))
 ;; (doseq [l (take 20 (iterate #(map collatz-basic %) (range 1 10)))]
 ;;   (println l))
 ;(def hvf7-20 '([7 3] [22 3] [11 3] [34 2] [17 2] [52 3] [26 3] [13 3] [40 2] [20 2] [10 2] [5 2] [16 1] [8 1] [4 1] [2 1]))
