@@ -1,10 +1,13 @@
 (ns expriments.core
   (:require [quil.core :as q]
-            [expriments.renderer :as renderer]))
+            [expriments.renderer :as renderer]
+            [quil.middleware :as m]))
 
-(q/defsketch example                
-  :title "Oh so many grey circles"
-  :setup renderer/setup           
-  :draw renderer/draw              
-  :size [323 200]
+(q/defsketch example
+  :title "my collatz solution"
+  :setup renderer/setup
+  :draw renderer/draw
+  :update renderer/update-state
+  :size [400 400]
+  :middleware [m/fun-mode]
   :features [:resizable])
