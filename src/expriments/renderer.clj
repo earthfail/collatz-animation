@@ -26,24 +26,37 @@
 (defn update-state [state]
   state)
 
+
+(defn arrow [sv ev]
+  (q/line sv ev)
+  (q/with-translation ev
+    (let [[x y] (map - ev sv)
+          len (q/mag x y)
+          arr-len (/ len 5 (q/sqrt 2))
+          scale-fun (partial mapv #(* arr-len %))]
+      (q/with-rotation [(q/atan2 y x)]
+        (q/line [0 0] (scale-fun [-1 1]))
+        (q/line [0 0] (scale-fun [-1 -1]))))))
 (defn draw [{circle-groups :circle-groups
              connections :connections}]
-  (q/background 255)
-  (q/translate (/ (q/width) 2) (/ (q/height) 2))
-  (doseq [[radius elements] circle-groups]
-    (let [ang (/ q/TWO-PI (count elements))
-          r (* scaler radius)]
-      (q/no-fill)
-      (q/ellipse 0 0 (+ 10  (* 2 r)) (+ 10  (* 2 r)))
-      (q/fill 0)
-      (doall (map-indexed (fn [frac n]
-                            (q/text (str n)
-                                    (*  r (q/cos (* ang frac)))
-                                    (*  r (q/sin (* ang frac)))))
-                          elements))))
+  (arrow [0 10] [50 0]))
+;; (defn draw []
+;;   (q/background 255)
+;;   (q/translate (/ (q/width) 2) (/ (q/height) 2))
+;;   (doseq [[radius elements] circle-groups]
+;;     (let [ang (/ q/TWO-PI (count elements))
+;;           r (* scaler radius)]
+;;       (q/no-fill)
+;;       (q/ellipse 0 0 (+ 10  (* 2 r)) (+ 10  (* 2 r)))
+;;       (q/fill 0)
+;;       (doall (map-indexed (fn [frac n]
+;;                             (q/text (str n)
+;;                                     (*  r (q/cos (* ang frac)))
+;;                                     (*  r (q/sin (* ang frac)))))
+;;                           elements))))
   
-  (doseq [[dist sources] connections]
-    (let [pdist (xy-number circle-groups dist)]
-      (doall (map (fn [n]
-                    (q/line pdist (xy-number circle-groups n)))
-                  sources)))))
+;;   (doseq [[dist sources] connections]
+;;     (let [pdist (xy-number circle-groups dist)]
+;;       (doall (map (fn [n]
+;;                     (q/line pdist (xy-number circle-groups n)))
+;;                   sources)))))
