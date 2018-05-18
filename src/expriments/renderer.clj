@@ -25,38 +25,43 @@
 
 (defn update-state [state]
   state)
-
-
+;; draw a line from start vector (sv) to end vector (ev) and make the
+;; tip of arrow at ev
 (defn arrow [sv ev]
   (q/line sv ev)
   (q/with-translation ev
     (let [[x y] (map - ev sv)
           len (q/mag x y)
-          arr-len (/ len 5 (q/sqrt 2))
+          arr-len 10;(/ len 15 (q/sqrt 2))
           scale-fun (partial mapv #(* arr-len %))]
       (q/with-rotation [(q/atan2 y x)]
         (q/line [0 0] (scale-fun [-1 1]))
         (q/line [0 0] (scale-fun [-1 -1]))))))
+;; (defn draw [{circle-groups :circle-groups
+;;              connections :connections}]
+;;   (q/background 50)
+;;   (apply q/translate (map #(/ % 2) [(q/width) (q/height)]))
+;;   (arrow [0 10] [50 0]))
+;; draw: levels in circles, put numbers in their level ,order them
+;; draw arrow from n to 3n+1 or n/2
 (defn draw [{circle-groups :circle-groups
              connections :connections}]
-  (arrow [0 10] [50 0]))
-;; (defn draw []
-;;   (q/background 255)
-;;   (q/translate (/ (q/width) 2) (/ (q/height) 2))
-;;   (doseq [[radius elements] circle-groups]
-;;     (let [ang (/ q/TWO-PI (count elements))
-;;           r (* scaler radius)]
-;;       (q/no-fill)
-;;       (q/ellipse 0 0 (+ 10  (* 2 r)) (+ 10  (* 2 r)))
-;;       (q/fill 0)
-;;       (doall (map-indexed (fn [frac n]
-;;                             (q/text (str n)
-;;                                     (*  r (q/cos (* ang frac)))
-;;                                     (*  r (q/sin (* ang frac)))))
-;;                           elements))))
+  (q/background 255)
+  (q/translate (/ (q/width) 2) (/ (q/height) 2))
+  (doseq [[radius elements] circle-groups]
+    (let [ang (/ q/TWO-PI (count elements))
+          r (* scaler radius)]
+      (q/no-fill)
+      (q/ellipse 0 0 (+ 10  (* 2 r)) (+ 10  (* 2 r)))
+      (q/fill 0)
+      (doall (map-indexed (fn [frac n]
+                            (q/text (str n)
+                                    (*  r (q/cos (* ang frac)))
+                                    (*  r (q/sin (* ang frac)))))
+                          elements))))
   
-;;   (doseq [[dist sources] connections]
-;;     (let [pdist (xy-number circle-groups dist)]
-;;       (doall (map (fn [n]
-;;                     (q/line pdist (xy-number circle-groups n)))
-;;                   sources)))))
+  (doseq [[dist sources] connections]
+    (let [pdist (xy-number circle-groups dist)]
+      (doall (map (fn [n]
+                    (arrow (xy-number circle-groups n) pdist))
+                  sources)))))
