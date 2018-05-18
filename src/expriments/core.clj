@@ -5,8 +5,8 @@
 
 (q/defsketch example
   :title "my collatz solution"
-  :setup renderer/setup
-  :draw renderer/draw
+  :setup renderer/setup!
+  :draw renderer/draw!
   :update renderer/update-state
   :size [400 400]
   :middleware [m/fun-mode]
